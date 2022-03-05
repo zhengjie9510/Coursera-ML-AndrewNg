@@ -60,26 +60,26 @@ Theta2_grad = zeros(size(Theta2));
 %               backpropagation. That is, you can compute the gradients for
 %               the regularization separately and then add them to Theta1_grad
 %               and Theta2_grad from Part 2.
-%
 
+% y_matrix
+y_matrix = zeros(m,num_labels);
+for i=1:m
+    y_matrix(i,y(i)) = 1;
+end
 
+% Add ones to the X data matrix
+z2 = [ones(m, 1) X] * Theta1';
+a2 = sigmoid(z2);
+z3 = [ones(m, 1) a2] * Theta2';
+a3 = sigmoid(z3);
+J = sum(1 / m * (-y_matrix .* log(a3) - (1 - y_matrix) .* log(1 - a3)),'all') + lambda / (2 * m)*(sum(Theta1(:,2:end).^2,'all') + sum(Theta2(:,2:end).^2,'all'));
 
+% backpropagation
+delta3 = a3 - y_matrix;
+delta2 = delta3 * Theta2(:,2:end) .* sigmoidGradient(z2);
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
+Theta2_grad = delta3' * [ones(m, 1) a2] / m +  lambda / m * [zeros(size(Theta2, 1), 1) Theta2(:, 2:end)];
+Theta1_grad = delta2' * [ones(m, 1) X] / m + lambda / m * [zeros(size(Theta1, 1), 1) Theta1(:, 2:end)];
 % -------------------------------------------------------------
 
 % =========================================================================

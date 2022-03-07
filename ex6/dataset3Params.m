@@ -22,9 +22,23 @@ sigma = 0.3;
 %  Note: You can compute the prediction error using 
 %        mean(double(predictions ~= yval))
 %
+params = [0.01, 0.03, 0.1, 0.3, 1, 3, 10, 30];
 
+min_error = 0;
 
-
+for c=params
+    for s=params
+        model = svmTrain(X, y, c, @(x1, x2) gaussianKernel(x1, x2, s)); % 模仿ex6的调用方式
+        predictions = svmPredict(model, Xval); % 查看svmPredict
+        error = mean(double(predictions ~= yval));
+        
+        if min_error == 0 || error < min_error
+            min_error = error;
+            C = c;
+            sigma = s;
+        end
+    end
+end
 
 
 

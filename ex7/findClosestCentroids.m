@@ -21,9 +21,12 @@ idx = zeros(size(X,1), 1);
 % Note: You can use a for-loop over the examples to compute this.
 %
 
+index_temp = zeros(size(X,1), K);
+for i=1:K
+     index_temp(:,i) = sum((X - centroids(i,:)).^2,2);
+end
 
-
-
+[~,idx] = min(index_temp,[],2);
 
 
 
